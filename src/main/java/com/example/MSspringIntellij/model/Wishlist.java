@@ -1,14 +1,7 @@
 package com.example.MSspringIntellij.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.Data;
+import jakarta.persistence.*;
 
-@Data
 @Entity
 @Table(name = "wishlist")
 public class Wishlist {
@@ -18,9 +11,39 @@ public class Wishlist {
     @Column(name = "wishlist_id")
     private Integer wishlistId;
 
+    @Column(name = "product_id")
+    private Integer productId;
+
     @Column(name = "customer_id")
     private Integer customerId;
 
-    @Column(name = "product_id")
-    private Integer productId;
+    // Add getters and setters
+    public Integer getWishlistId() {
+        return wishlistId;
+    }
+
+    public void setWishlistId(Integer wishlistId) {
+        this.wishlistId = wishlistId;
+    }
+
+    public Integer getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Integer productId) {
+        this.productId = productId;
+    }
+
+    public Integer getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(Integer userId) {
+        this.customerId = userId;
+    }
+
+    public Wishlist save(Wishlist wishlist) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'save'");
+    }
 }

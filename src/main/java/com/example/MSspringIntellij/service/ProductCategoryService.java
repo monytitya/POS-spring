@@ -1,23 +1,20 @@
 package com.example.MSspringIntellij.service;
 
+import com.example.MSspringIntellij.model.ProductCategory;
+import com.example.MSspringIntellij.repository.ProductCategoryRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.example.MSspringIntellij.model.ProductCategory;
-import com.example.MSspringIntellij.repository.ProductCategoryRepository;
-
 @Service
+@Transactional
 public class ProductCategoryService {
 
-    private final ProductCategoryRepository repository;
-
     @Autowired
-    public ProductCategoryService(ProductCategoryRepository repository) {
-        this.repository = repository;
-    }
+    private ProductCategoryRepository repository;
 
     public List<ProductCategory> findAll() {
         return repository.findAll();
@@ -27,8 +24,8 @@ public class ProductCategoryService {
         return repository.findById(id);
     }
 
-    public ProductCategory save(ProductCategory pc) {
-        return repository.save(pc);
+    public ProductCategory save(ProductCategory category) {
+        return repository.save(category);
     }
 
     public void deleteById(Integer id) {

@@ -19,43 +19,35 @@ import com.example.MSspringIntellij.service.StoreService;
 @RestController
 @RequestMapping("/api/stores")
 public class StoreController {
-
-    private final StoreService service;
-
     @Autowired
-    public StoreController(StoreService service) {
-        this.service = service;
-    }
+    private StoreService service;
 
     @GetMapping
-    public List<Store> getAll() { return service.findAll(); }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Store> getById(@PathVariable Integer id) {
-        return service.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public List<Store> getAll() {
+        return service.findAll();
     }
 
     @PostMapping
-    public ResponseEntity<Store> create(@RequestBody Store obj) { return ResponseEntity.ok(service.save(obj)); }
+    public ResponseEntity<Store> create(@RequestBody Store store) {
+        store.setStoreId(null);
+        return ResponseEntity.ok(service.save(store));
+    }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Store> update(@PathVariable Integer id, @RequestBody Store obj) {
-        return service.findById(id)
-                .map(existing -> {
-                    obj.setStoreId(id);
-                    return ResponseEntity.ok(service.save(obj));
-                })
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<Store> update(@PathVariable Integer id, @RequestBody Store data) {
+        return service.findById(id).map(existing -> {
+            existing.setStoreButton(data.getStoreButton());
+            existing.setStoreDesc(data.getStoreDesc());
+            existing.setStoreImage(data.getStoreImage());
+            existing.setStoreTitle(data.getStoreTitle());
+            existing.setStoreUrl(data.getStoreUrl());
+            return ResponseEntity.ok(service.save(existing));
+        }).orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
-        if (service.findById(id).isPresent()) {
-            service.deleteById(id);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
+        service.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import com.example.MSspringIntellij.model.Wishlist;
 import com.example.MSspringIntellij.repository.WishlistRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class WishlistService {
 
@@ -19,8 +21,27 @@ public class WishlistService {
         this.repository = repository;
     }
 
-    public List<Wishlist> findAll() { return repository.findAll(); }
-    public Optional<Wishlist> findById(Integer id) { return repository.findById(id); }
-    public Wishlist save(Wishlist w) { return repository.save(w); }
-    public void deleteById(Integer id) { repository.deleteById(id); }
+    public List<Wishlist> findAll() {
+        return repository.findAll();
+    }
+
+    @SuppressWarnings("null")
+    public Optional<Wishlist> findById(Integer id) {
+        return repository.findById(id);
+    }
+
+    @SuppressWarnings("null")
+    public Wishlist save(Wishlist w) {
+        return repository.save(w);
+    }
+
+    @SuppressWarnings("null")
+    public void deleteById(Integer id) {
+        repository.deleteById(id);
+    }
+
+    @Transactional // This creates a "bubble" where all DB operations are coordinated
+    public Wishlist updateWishlist(Wishlist wishlist) {
+        return repository.save(wishlist);
+    }
 }

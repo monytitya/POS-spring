@@ -14,11 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.MSspringIntellij.model.Payment;
-import com.example.MSspringIntellij.service.PaymentService;
 
 @RestController
 @RequestMapping("/api/payments")
-public class PaymentController {
+public class PaymentController<PaymentService> {
 
     private final PaymentService service;
 
@@ -28,7 +27,9 @@ public class PaymentController {
     }
 
     @GetMapping
-    public List<Payment> getAll() { return service.findAll(); }
+    public List<Payment> getAll() {
+        return ((Object) service).findAll();
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Payment> getById(@PathVariable Integer id) {
@@ -38,7 +39,9 @@ public class PaymentController {
     }
 
     @PostMapping
-    public ResponseEntity<Payment> create(@RequestBody Payment obj) { return ResponseEntity.ok(service.save(obj)); }
+    public ResponseEntity<Payment> create(@RequestBody Payment obj) {
+        return ResponseEntity.ok(service.save(obj));
+    }
 
     @PutMapping("/{id}")
     public ResponseEntity<Payment> update(@PathVariable Integer id, @RequestBody Payment obj) {
