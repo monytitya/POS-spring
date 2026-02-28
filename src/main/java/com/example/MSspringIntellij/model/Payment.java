@@ -7,9 +7,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
-import lombok.Data;
+// lombok import may be removed if you no longer want auto‑generated code
+// import lombok.Data;
 
-@Data
+//@Data   // optional when you have explicit getters/setters
 @Entity
 @Table(name = "payments")
 public class Payment {
@@ -36,4 +37,62 @@ public class Payment {
     @Lob
     @Column(name = "payment_date")
     private String paymentDate;
+
+    // getters and setters
+
+    public Integer getPaymentId() {
+        return paymentId;
+    }
+
+    public void setPaymentId(Integer paymentId) {
+        this.paymentId = paymentId;
+    }
+
+    public Integer getInvoiceNo() {
+        return invoiceNo;
+    }
+
+    public void setInvoiceNo(Integer invoiceNo) {
+        this.invoiceNo = invoiceNo;
+    }
+
+    public Integer getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Integer amount) {
+        this.amount = amount;
+    }
+
+    public String getPaymentMode() {
+        return paymentMode;
+    }
+
+    public void setPaymentMode(String paymentMode) {
+        this.paymentMode = paymentMode;
+    }
+
+    public Integer getRefNo() {
+        return refNo;
+    }
+
+    public void setRefNo(Integer refNo) {
+        this.refNo = refNo;
+    }
+
+    public Integer getCode() {
+        return code;
+    }
+
+    public void setCode(Integer code) {
+        this.code = code;
+    }
+
+    public String getPaymentDate() {
+        return paymentDate;
+    }
+
+    public void setPaymentDate(String paymentDate) {
+        this.paymentDate = paymentDate;
+    }
 }
