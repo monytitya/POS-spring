@@ -5,10 +5,6 @@ import {
   PieChart, Pie, Cell, Legend,
 } from "recharts";
 
-/* ─────────────────────────────────────────────
-   DESIGN SYSTEM — refined luxury commerce tone
-   Deep navy + warm gold accents, Playfair headings
-───────────────────────────────────────────── */
 const C = {
   navy:    "#0f172a",
   navyMid: "#1e293b",
@@ -47,7 +43,6 @@ const api = {
   delete: (p)    => fetch(`${BASE}${p}`,{method:"DELETE"}).then(r=>r.json()).catch(()=>null),
 };
 
-/* ─── Mock Data ───────────────────────────── */
 const MOCK = {
   products: [
     { id:1, name:"Rouge Cream Lipstick",  price:299, category:"Make-up",    stock:45, image:"https://images.unsplash.com/photo-1586495777744-4e6232bf2b49?w=300" },
@@ -370,28 +365,55 @@ const ProductsPage = ({ data, onRefresh }) => {
   const [loading, setLoading] = useState(false);
   const [search,  setSearch]  = useState("");
   const [products,setProducts]= useState(data?.products||[]);
+  const [imgPreview, setImgPreview] = useState("");
 
   useEffect(()=>{ setProducts(data?.products||[]); },[data?.products]);
 
   const onChange = e => setForm(f=>({...f,[e.target.name]:e.target.value}));
-  const openAdd  = () => { setForm({name:"",price:"",category:"",stock:"",image:""}); setModal("add"); };
-  const openEdit = p  => { setForm({name:p.name,price:p.price,category:p.category,stock:p.stock,image:p.image||""}); setModal({edit:p}); };
+
+  const onImageChange = e => {
+    const file = e.target.files?.[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      setImgPreview(ev.target.result);
+      setForm(f=>({...f, image: ev.target.result}));
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const openAdd  = () => {
+    setForm({name:"",price:"",category:"",stock:"",image:""});
+    setImgPreview("");
+    setModal("add");
+  };
+  const openEdit = p => {
+    setForm({name:p.name,price:p.price,category:p.category,stock:p.stock,image:p.image||""});
+    setImgPreview(p.image||"");
+    setModal({edit:p});
+  };
 
   const handleSubmit = async () => {
     setLoading(true);
-    if(modal==="add") await api.post("/api/products",form);
-    else              await api.put(`/api/products/${modal.edit.id}`,form);
+    const payload = {
+      ...form,
+      price: Number(form.price),
+      stock: Number(form.stock),
+    };
+    if(modal==="add") await api.post("/api/products", payload);
+    else              await api.put(`/api/products/${modal.edit.id}`, payload);
     setLoading(false); setModal(null); onRefresh("products");
   };
+
   const handleDelete = async id => {
     if(window.confirm("Delete this product?")){ await api.delete(`/api/products/${id}`); onRefresh("products"); }
   };
 
   const filtered = products.filter(p=>(p?.name||"").toLowerCase().includes(search.toLowerCase()));
 
-  // Summary cards
-  const totalValue = products.reduce((s,p)=>s+(p.price||0)*(p.stock||0),0);
-  const lowStock   = products.filter(p=>p.stock<15).length;
+  // Fix: parse as Number to handle string values from API
+  const totalValue = products.reduce((s,p)=>s+(Number(p.price)||0)*(Number(p.stock)||0),0);
+  const lowStock   = products.filter(p=>Number(p.stock)<15).length;
 
   return (
     <div>
@@ -422,18 +444,18 @@ const ProductsPage = ({ data, onRefresh }) => {
       <SearchBar value={search} onChange={setSearch} placeholder="Search products..."/>
 
       <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:18}}>
-        {filtered.map(p=>(
-          <Card key={p.id} style={{padding:0,overflow:"hidden"}}>
+        {filtered.map((p, idx)=>(
+          <Card key={p.id ?? idx} style={{padding:0,overflow:"hidden"}}>
             <div style={{height:160,background:"#f1f5f9",overflow:"hidden",position:"relative"}}>
               <img src={p.image} alt={p.name} style={{width:"100%",height:"100%",objectFit:"cover"}} onError={e=>{e.target.style.display="none";}}/>
               <span style={{position:"absolute",top:10,right:10,background:"rgba(255,255,255,0.95)",color:C.slate,padding:"3px 10px",borderRadius:20,fontSize:11,fontWeight:600,backdropFilter:"blur(4px)"}}>{p.category}</span>
-              {p.stock<15 && <span style={{position:"absolute",top:10,left:10,background:C.red,color:"#fff",padding:"3px 10px",borderRadius:20,fontSize:11,fontWeight:700}}>Low Stock</span>}
+              {Number(p.stock)<15 && <span style={{position:"absolute",top:10,left:10,background:C.red,color:"#fff",padding:"3px 10px",borderRadius:20,fontSize:11,fontWeight:700}}>Low Stock</span>}
             </div>
             <div style={{padding:"16px 18px"}}>
               <div style={{fontWeight:700,color:C.navy,marginBottom:4,fontSize:15,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{p.name}</div>
               <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:14}}>
-                <span style={{fontSize:22,fontWeight:800,color:C.blue}}>${p.price}</span>
-                <span style={{fontSize:12,fontWeight:700,padding:"4px 10px",borderRadius:20,background:p.stock<15?C.redLt:C.emerLt,color:p.stock<15?C.red:C.emerald}}>
+                <span style={{fontSize:22,fontWeight:800,color:C.blue}}>${Number(p.price).toFixed(2)}</span>
+                <span style={{fontSize:12,fontWeight:700,padding:"4px 10px",borderRadius:20,background:Number(p.stock)<15?C.redLt:C.emerLt,color:Number(p.stock)<15?C.red:C.emerald}}>
                   Stock: {p.stock}
                 </span>
               </div>
@@ -456,7 +478,29 @@ const ProductsPage = ({ data, onRefresh }) => {
           <Field label="Price ($)"    name="price"    value={form.price}    onChange={onChange} type="number" placeholder="299"/>
           <Field label="Category"     name="category" value={form.category} onChange={onChange} placeholder="Skincare"/>
           <Field label="Stock"        name="stock"    value={form.stock}    onChange={onChange} type="number" placeholder="50"/>
-          <Field label="Image URL"    name="image"    value={form.image}    onChange={onChange} placeholder="https://..."/>
+
+          {/* Image Upload */}
+          <div style={{marginBottom:14}}>
+            <label style={{display:"block",fontSize:12,fontWeight:700,color:C.slate,marginBottom:6}}>Product Image</label>
+
+            {/* Preview */}
+            {imgPreview && (
+              <div style={{width:"100%",height:160,borderRadius:12,overflow:"hidden",marginBottom:10,background:"#f1f5f9",border:`1.5px solid ${C.border}`}}>
+                <img src={imgPreview} alt="preview" style={{width:"100%",height:"100%",objectFit:"cover"}}/>
+              </div>
+            )}
+
+            {/* Upload button */}
+            <label style={{display:"flex",alignItems:"center",justifyContent:"center",gap:8,width:"100%",padding:"10px 0",borderRadius:10,border:`2px dashed ${C.border}`,cursor:"pointer",fontSize:13,fontWeight:600,color:C.slate,background:C.bg,boxSizing:"border-box",transition:"border-color .2s"}}
+              onMouseOver={e=>e.currentTarget.style.borderColor=C.blue}
+              onMouseOut={e=>e.currentTarget.style.borderColor=C.border}
+            >
+              <Icon name="upload" size={15}/>
+              {imgPreview ? "Change Image" : "Upload Image"}
+              <input type="file" accept="image/*" onChange={onImageChange} style={{display:"none"}}/>
+            </label>
+          </div>
+
           <Btn onClick={handleSubmit} disabled={loading} style={{width:"100%",justifyContent:"center",marginTop:4}}>
             {loading?"Saving...":modal==="add"?"Create Product":"Update Product"}
           </Btn>
@@ -862,8 +906,8 @@ const POSPage = ({ products }) => {
           />
         </div>
         <div style={{flex:1,overflowY:"auto",display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:14,alignContent:"start"}}>
-          {filtered.map(p=>(
-            <button key={p.id} onClick={()=>addToCart(p)}
+          {filtered.map((p, idx)=>(
+            <button key={p.id ?? idx} onClick={()=>addToCart(p)}
               style={{background:C.white,borderRadius:16,border:`1.5px solid ${C.border}`,padding:14,textAlign:"left",cursor:"pointer",transition:"border-color .2s,box-shadow .2s",boxShadow:"0 1px 4px rgba(0,0,0,0.04)"}}
               onMouseOver={e=>{e.currentTarget.style.borderColor=C.blue;e.currentTarget.style.boxShadow="0 4px 16px rgba(37,99,235,0.12)";}}
               onMouseOut={e=>{e.currentTarget.style.borderColor=C.border;e.currentTarget.style.boxShadow="0 1px 4px rgba(0,0,0,0.04)";}}
@@ -888,8 +932,8 @@ const POSPage = ({ products }) => {
 
         <div style={{flex:1,overflowY:"auto",padding:16}}>
           {cart.length===0&&<p style={{color:C.muted,fontSize:13,textAlign:"center",marginTop:32}}>Cart is empty</p>}
-          {cart.map(item=>(
-            <div key={item.id} style={{display:"flex",alignItems:"center",gap:10,marginBottom:12,background:C.bg,borderRadius:12,padding:10}}>
+          {cart.map((item, idx)=>(
+            <div key={item.id ?? idx} style={{display:"flex",alignItems:"center",gap:10,marginBottom:12,background:C.bg,borderRadius:12,padding:10}}>
               <div style={{width:40,height:40,background:C.border,borderRadius:8,overflow:"hidden",flexShrink:0}}>
                 <img src={item.image} alt={item.name} style={{width:"100%",height:"100%",objectFit:"cover"}} onError={e=>{e.target.style.display="none";}}/>
               </div>
@@ -937,18 +981,18 @@ const POSPage = ({ products }) => {
           </div>
 
           <button onClick={placeOrder}
-            style={{width:"100%",padding:"13px 0",borderRadius:14,border:"none",cursor:cart.length?
-
-"pointer":"not-allowed",fontSize:14,fontWeight:800,background:orderPlaced?gradients.emerald:gradients.blue,color:"#fff",display:"flex",alignItems:"center",justifyContent:"center",gap:8,opacity:cart.length?1:.6,boxShadow:cart.length?"0 4px 14px rgba(37,99,235,0.3)":"none"}}
+            style={{width:"100%",padding:"13px 0",borderRadius:14,border:"none",cursor:cart.length?"pointer":"not-allowed",fontSize:14,fontWeight:800,background:orderPlaced?gradients.emerald:gradients.blue,color:"#fff",display:"flex",alignItems:"center",justifyContent:"center",gap:8,opacity:cart.length?1:.6,boxShadow:cart.length?"0 4px 14px rgba(37,99,235,0.3)":"none"}}
           >
-            {orderPlaced?<><Icon name="check" size={16}/>Order Placed!</>:"Place Order"}
+            {orderPlaced
+              ? <><Icon key="icon" name="check" size={16}/><span key="label">Order Placed!</span></>
+              : "Place Order"
+            }
           </button>
         </div>
       </div>
     </div>
   );
 };
-
 /* ─── MAIN APP ────────────────────────────── */
 export default function App() {
   const [page,        setPage]        = useState("dashboard");
@@ -1141,7 +1185,7 @@ export default function App() {
             </div>
             <div style={{display:"flex",alignItems:"center",gap:10}}>
               <div style={{width:36,height:36,background:gradients.blue,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",fontWeight:800,fontSize:14,boxShadow:"0 3px 10px rgba(37,99,235,0.3)"}}>A</div>
-              {sidebarOpen&&<div><div style={{fontWeight:700,color:C.navy,fontSize:13}}>Admin</div><div style={{color:C.muted,fontSize:11}}>admin@commercehq.com</div></div>}
+              {sidebarOpen&&<div><div style={{fontWeight:700,color:C.navy,fontSize:13}}>Admin</div><div style={{color:C.muted,fontSize:11}}>maotityamony@gmail.com</div></div>}
             </div>
           </div>
         </div>
