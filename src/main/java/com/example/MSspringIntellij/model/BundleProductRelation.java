@@ -1,14 +1,7 @@
 package com.example.MSspringIntellij.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.Data;
+import jakarta.persistence.*;
 
-@Data
 @Entity
 @Table(name = "bundle_product_relation")
 public class BundleProductRelation {
@@ -27,11 +20,39 @@ public class BundleProductRelation {
     @Column(name = "bundle_id")
     private Integer bundleId;
 
-    public void setRelId1(Integer id) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    // --- Getters ---
+
+    public Integer getRelId() {
+        return relId;
     }
 
-    public void setRelId(Integer id) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public String getRelTitle() {
+        return relTitle;
+    }
+
+    public Integer getProductId() {
+        return productId;
+    }
+
+    public Integer getBundleId() {
+        return bundleId;
+    }
+
+    // --- Setters ---
+
+    public void setRelId(Integer relId) {
+        this.relId = relId;
+    }
+
+    public void setRelTitle(String relTitle) {
+        this.relTitle = relTitle;
+    }
+
+    public void setProductId(Integer productId) {
+        this.productId = productId;
+    }
+
+    public void setBundleId(Integer bundleId) {
+        this.bundleId = bundleId;
     }
 }

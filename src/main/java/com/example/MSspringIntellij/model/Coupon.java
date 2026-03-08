@@ -1,14 +1,7 @@
 package com.example.MSspringIntellij.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.Data;
+import jakarta.persistence.*;
 
-@Data
 @Entity
 @Table(name = "coupons")
 public class Coupon {
@@ -35,4 +28,64 @@ public class Coupon {
 
     @Column(name = "coupon_used")
     private Integer couponUsed;
+
+    // --- Getters ---
+
+    public Integer getCouponId() {
+        return couponId;
+    }
+
+    public Integer getProductId() {
+        return productId;
+    }
+
+    public String getCouponTitle() {
+        return couponTitle;
+    }
+
+    public String getCouponPrice() {
+        return couponPrice;
+    }
+
+    public String getCouponCode() {
+        return couponCode;
+    }
+
+    public Integer getCouponLimit() {
+        return couponLimit;
+    }
+
+    public Integer getCouponUsed() {
+        return couponUsed;
+    }
+
+    // --- Setters ---
+
+    public void setCouponId(Integer couponId) {
+        this.couponId = couponId;
+    }
+
+    public void setProductId(Integer productId) {
+        this.productId = productId;
+    }
+
+    public void setCouponTitle(String couponTitle) {
+        this.couponTitle = couponTitle;
+    }
+
+    public void setCouponPrice(String couponPrice) {
+        this.couponPrice = couponPrice;
+    }
+
+    public void setCouponCode(String couponCode) {
+        this.couponCode = couponCode;
+    }
+
+    public void setCouponLimit(Integer couponLimit) {
+        this.couponLimit = couponLimit;
+    }
+
+    public void setCouponUsed(Integer couponUsed) {
+        this.couponUsed = couponUsed;
+    }
 }

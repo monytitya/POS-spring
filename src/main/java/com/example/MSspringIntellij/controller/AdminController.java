@@ -1,35 +1,28 @@
 package com.example.MSspringIntellij.controller;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.example.MSspringIntellij.model.Admin;
 import com.example.MSspringIntellij.service.AdminService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/admins")
+@CrossOrigin("*")
 public class AdminController {
 
-    private final AdminService service;
-
     @Autowired
-    public AdminController(AdminService service) {
-        this.service = service;
+    private AdminService service;
+
+    // READ ALL
+    @GetMapping
+    public List<Admin> getAll() {
+        return service.findAll();
     }
 
-    @GetMapping
-    public List<Admin> getAll() { return service.findAll(); }
-
+    // READ ONE
     @GetMapping("/{id}")
     public ResponseEntity<Admin> getById(@PathVariable Integer id) {
         return service.findById(id)
@@ -38,24 +31,22 @@ public class AdminController {
     }
 
     @PostMapping
-    public ResponseEntity<Admin> create(@RequestBody Admin obj) { return ResponseEntity.ok(service.save(obj)); }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Admin> update(@PathVariable Integer id, @RequestBody Admin obj) {
-        return service.findById(id)
-                .map(existing -> {
-                    obj.setAdminId(id);
-                    return ResponseEntity.ok(service.save(obj));
-                })
-                .orElse(ResponseEntity.notFound().build());
+    public Admin create(@RequestBody Admin admin) {
+        return service.saveOnlyData(admin);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Admin> update(@PathVariable Integer id, @RequestBody Admin admin) {
+        return service.findById(id).map(existing -> {
+            admin.setAdminId(id);
+            return ResponseEntity.ok(service.saveOnlyData(admin));
+        }).orElse(ResponseEntity.notFound().build());
+    }
+
+    // DELETE
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
-        if (service.findById(id).isPresent()) {
-            service.deleteById(id);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
+        service.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }

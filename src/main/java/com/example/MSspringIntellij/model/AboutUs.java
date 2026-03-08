@@ -1,15 +1,7 @@
 package com.example.MSspringIntellij.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
-import jakarta.persistence.Table;
-import lombok.Data;
+import jakarta.persistence.*;
 
-@Data
 @Entity
 @Table(name = "about_us")
 public class AboutUs {
@@ -31,7 +23,39 @@ public class AboutUs {
     @Column(name = "about_desc")
     private String aboutDesc;
 
-    public void setAboutId(Integer id) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    // --- Getters ---
+
+    public Integer getAboutId() {
+        return aboutId;
+    }
+
+    public String getAboutHeading() {
+        return aboutHeading;
+    }
+
+    public String getAboutShortDesc() {
+        return aboutShortDesc;
+    }
+
+    public String getAboutDesc() {
+        return aboutDesc;
+    }
+
+    // --- Setters ---
+
+    public void setAboutId(Integer aboutId) {
+        this.aboutId = aboutId;
+    }
+
+    public void setAboutHeading(String aboutHeading) {
+        this.aboutHeading = aboutHeading;
+    }
+
+    public void setAboutShortDesc(String aboutShortDesc) {
+        this.aboutShortDesc = aboutShortDesc;
+    }
+
+    public void setAboutDesc(String aboutDesc) {
+        this.aboutDesc = aboutDesc;
     }
 }

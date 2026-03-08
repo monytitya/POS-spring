@@ -6,9 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.Data;
 
-@Data
 @Entity
 @Table(name = "enquiry_types")
 public class EnquiryType {
@@ -20,4 +18,20 @@ public class EnquiryType {
 
     @Column(name = "enquiry_title")
     private String enquiryTitle;
+
+    public Integer getEnquiryId() {
+        return enquiryId;
+    }
+
+    public void setEnquiryId(Integer enquiryId) {
+        this.enquiryId = enquiryId;
+    }
+
+    public String getEnquiryTitle() {
+        return enquiryTitle;
+    }
+
+    public void setEnquiryTitle(String enquiryTitle) {
+        this.enquiryTitle = enquiryTitle;
+    }
 }

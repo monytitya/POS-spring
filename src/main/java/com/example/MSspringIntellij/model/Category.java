@@ -26,4 +26,40 @@ public class Category {
 
     @Column(name = "cat_image")
     private String catImage;
+
+    // Getter and Setter for catId
+    public Integer getCatId() {
+        return catId;
+    }
+
+    public void setCatId(Integer catId) {
+        this.catId = catId;
+    }
+
+    // Getter and Setter for catTitle
+    public String getCatTitle() {
+        return catTitle;
+    }
+
+    public void setCatTitle(String catTitle) {
+        this.catTitle = catTitle;
+    }
+
+    // Getter and Setter for catTop
+    public String getCatTop() {
+        return catTop;
+    }
+
+    public void setCatTop(String catTop) {
+        this.catTop = catTop;
+    }
+
+    // Getter and Setter for catImage
+    public String getCatImage() {
+        return catImage;
+    }
+
+    public void setCatImage(String catImage) {
+        this.catImage = catImage;
+    }
 }

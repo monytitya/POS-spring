@@ -1,15 +1,7 @@
 package com.example.MSspringIntellij.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
-import jakarta.persistence.Table;
-import lombok.Data;
+import jakarta.persistence.*;
 
-@Data
 @Entity
 @Table(name = "contact_us")
 public class ContactUs {
@@ -29,4 +21,40 @@ public class ContactUs {
     @Lob
     @Column(name = "contact_desc")
     private String contactDesc;
+
+    // ===== GETTERS =====
+
+    public Integer getContactId() {
+        return contactId;
+    }
+
+    public String getContactEmail() {
+        return contactEmail;
+    }
+
+    public String getContactHeading() {
+        return contactHeading;
+    }
+
+    public String getContactDesc() {
+        return contactDesc;
+    }
+
+    // ===== SETTERS =====
+
+    public void setContactId(Integer contactId) {
+        this.contactId = contactId;
+    }
+
+    public void setContactEmail(String contactEmail) {
+        this.contactEmail = contactEmail;
+    }
+
+    public void setContactHeading(String contactHeading) {
+        this.contactHeading = contactHeading;
+    }
+
+    public void setContactDesc(String contactDesc) {
+        this.contactDesc = contactDesc;
+    }
 }

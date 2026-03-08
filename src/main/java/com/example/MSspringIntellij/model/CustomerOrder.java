@@ -1,17 +1,8 @@
 package com.example.MSspringIntellij.model;
 
 import java.time.LocalDateTime;
+import jakarta.persistence.*;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
-import jakarta.persistence.Table;
-import lombok.Data;
-
-@Data
 @Entity
 @Table(name = "customer_orders")
 public class CustomerOrder {
@@ -32,17 +23,77 @@ public class CustomerOrder {
 
     private Integer qty;
 
-    @Lob
     private String size;
 
     @Column(name = "order_date")
     private LocalDateTime orderDate;
 
-    @Lob
     @Column(name = "order_status")
     private String orderStatus;
 
-    public void setOrderId(Integer id) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    // Getters
+    public Integer getOrderId() {
+        return orderId;
+    }
+
+    public Integer getCustomerId() {
+        return customerId;
+    }
+
+    public Integer getDueAmount() {
+        return dueAmount;
+    }
+
+    public Integer getInvoiceNo() {
+        return invoiceNo;
+    }
+
+    public Integer getQty() {
+        return qty;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public LocalDateTime getOrderDate() {
+        return orderDate;
+    }
+
+    public String getOrderStatus() {
+        return orderStatus;
+    }
+
+    // Setters
+    public void setOrderId(Integer orderId) {
+        this.orderId = orderId;
+    }
+
+    public void setCustomerId(Integer customerId) {
+        this.customerId = customerId;
+    }
+
+    public void setDueAmount(Integer dueAmount) {
+        this.dueAmount = dueAmount;
+    }
+
+    public void setInvoiceNo(Integer invoiceNo) {
+        this.invoiceNo = invoiceNo;
+    }
+
+    public void setQty(Integer qty) {
+        this.qty = qty;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
+
+    public void setOrderDate(LocalDateTime orderDate) {
+        this.orderDate = orderDate;
+    }
+
+    public void setOrderStatus(String orderStatus) {
+        this.orderStatus = orderStatus;
     }
 }

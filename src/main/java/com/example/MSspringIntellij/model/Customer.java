@@ -1,15 +1,7 @@
 package com.example.MSspringIntellij.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
-import jakarta.persistence.Table;
-import lombok.Data;
+import jakarta.persistence.*;
 
-@Data
 @Entity
 @Table(name = "customers")
 public class Customer {
@@ -53,4 +45,96 @@ public class Customer {
     @Lob
     @Column(name = "customer_confirm_code")
     private String customerConfirmCode;
+
+    // --- Getters ---
+
+    public Integer getCustomerId() {
+        return customerId;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public String getCustomerEmail() {
+        return customerEmail;
+    }
+
+    public String getCustomerPass() {
+        return customerPass;
+    }
+
+    public String getCustomerCountry() {
+        return customerCountry;
+    }
+
+    public String getCustomerCity() {
+        return customerCity;
+    }
+
+    public String getCustomerContact() {
+        return customerContact;
+    }
+
+    public String getCustomerAddress() {
+        return customerAddress;
+    }
+
+    public String getCustomerImage() {
+        return customerImage;
+    }
+
+    public String getCustomerIp() {
+        return customerIp;
+    }
+
+    public String getCustomerConfirmCode() {
+        return customerConfirmCode;
+    }
+
+    // --- Setters ---
+
+    public void setCustomerId(Integer customerId) {
+        this.customerId = customerId;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public void setCustomerEmail(String customerEmail) {
+        this.customerEmail = customerEmail;
+    }
+
+    public void setCustomerPass(String customerPass) {
+        this.customerPass = customerPass;
+    }
+
+    public void setCustomerCountry(String customerCountry) {
+        this.customerCountry = customerCountry;
+    }
+
+    public void setCustomerCity(String customerCity) {
+        this.customerCity = customerCity;
+    }
+
+    public void setCustomerContact(String customerContact) {
+        this.customerContact = customerContact;
+    }
+
+    public void setCustomerAddress(String customerAddress) {
+        this.customerAddress = customerAddress;
+    }
+
+    public void setCustomerImage(String customerImage) {
+        this.customerImage = customerImage;
+    }
+
+    public void setCustomerIp(String customerIp) {
+        this.customerIp = customerIp;
+    }
+
+    public void setCustomerConfirmCode(String customerConfirmCode) {
+        this.customerConfirmCode = customerConfirmCode;
+    }
 }
